@@ -93,7 +93,7 @@ function LiveRecorder() {
         playsInline
         style={{ width: "60%", borderRadius: "10px", marginBottom: "1rem" }}
       />
-      <br />
+      <br/>
 
       {!recording ? (
         <button
