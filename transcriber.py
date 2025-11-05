@@ -1,7 +1,12 @@
+<<<<<<< HEAD:transcriber.py
+=======
+import os
+>>>>>>> 1afc19bf4d7cb340b0c57877aee9535b244f18df:backend/transcriber.py
 import subprocess
 import assemblyai as aai
 from transformers import T5ForConditionalGeneration, T5Tokenizer
 
+<<<<<<< HEAD:transcriber.py
 # ============================================================
 # 🔑 SETUP: Add your AssemblyAI API key directly here
 # ============================================================
@@ -14,17 +19,40 @@ if not aai.settings.api_key:
 # ============================================================
 # 🎵 Step 1: Extract audio URL from YouTube
 # ============================================================
+=======
+
+# === SETUP AssemblyAI API Key ===
+# Prefer environment variable for local & server compatibility
+# You can set this in your terminal before running the app:
+#   setx ASSEMBLYAI_API_KEY "your_api_key_here"  (Windows)
+#   export ASSEMBLYAI_API_KEY="your_api_key_here" (Mac/Linux)
+aai.settings.api_key = os.getenv("ASSEMBLYAI_API_KEY")
+
+if not aai.settings.api_key:
+    raise ValueError("❌ AssemblyAI API key not found. Please set ASSEMBLYAI_API_KEY environment variable.")
+
+
+# === Step 1: Extract audio from YouTube ===
+>>>>>>> 1afc19bf4d7cb340b0c57877aee9535b244f18df:backend/transcriber.py
 def get_audio_url_from_youtube(youtube_url: str) -> str | None:
     """
     Uses yt-dlp to extract direct audio URL from a YouTube video.
     """
     try:
+<<<<<<< HEAD:transcriber.py
         print("🎬 Extracting audio URL from YouTube...")
         result = subprocess.run(
             ["yt-dlp", "-f", "bestaudio", "-g", youtube_url],
             capture_output=True,
             text=True,
             check=True,
+=======
+        result = subprocess.run(
+            ['yt-dlp', '-f', 'bestaudio', '-g', youtube_url],
+            capture_output=True,
+            text=True,
+            check=True
+>>>>>>> 1afc19bf4d7cb340b0c57877aee9535b244f18df:backend/transcriber.py
         )
         audio_url = result.stdout.strip()
         print(f"✅ Extracted audio URL: {audio_url}")
@@ -34,9 +62,13 @@ def get_audio_url_from_youtube(youtube_url: str) -> str | None:
         return None
 
 
+<<<<<<< HEAD:transcriber.py
 # ============================================================
 # 🗣️ Step 2: Transcribe the audio
 # ============================================================
+=======
+# === Step 2: Transcribe audio ===
+>>>>>>> 1afc19bf4d7cb340b0c57877aee9535b244f18df:backend/transcriber.py
 def transcribe_audio_from_url(audio_url: str) -> str | None:
     """
     Transcribes audio from a given URL using AssemblyAI.
@@ -46,6 +78,7 @@ def transcribe_audio_from_url(audio_url: str) -> str | None:
         return None
 
     try:
+<<<<<<< HEAD:transcriber.py
         print("🎧 Starting transcription using AssemblyAI...")
         transcriber = aai.Transcriber()
         transcript = transcriber.transcribe(audio_url)
@@ -54,6 +87,14 @@ def transcribe_audio_from_url(audio_url: str) -> str | None:
             print(f"❌ Transcription failed: {transcript.error}")
             return None
 
+=======
+        print(f"🎧 Starting transcription from URL: {audio_url}")
+        transcriber = aai.Transcriber()
+        transcript = transcriber.transcribe(audio_url)
+        if transcript.status == aai.TranscriptStatus.error:
+            print(f"❌ Transcription failed: {transcript.error}")
+            return None
+>>>>>>> 1afc19bf4d7cb340b0c57877aee9535b244f18df:backend/transcriber.py
         print("✅ Transcription complete.")
         return transcript.text
     except Exception as e:
@@ -61,9 +102,13 @@ def transcribe_audio_from_url(audio_url: str) -> str | None:
         return None
 
 
+<<<<<<< HEAD:transcriber.py
 # ============================================================
 # 🧠 Step 3: Summarize the text
 # ============================================================
+=======
+# === Step 3: Summarize text using T5 ===
+>>>>>>> 1afc19bf4d7cb340b0c57877aee9535b244f18df:backend/transcriber.py
 def summarize_text(text: str) -> str:
     """
     Summarizes transcribed text using the T5 transformer model.
@@ -74,6 +119,7 @@ def summarize_text(text: str) -> str:
 
     try:
         print("🧠 Summarizing text...")
+<<<<<<< HEAD:transcriber.py
         model = T5ForConditionalGeneration.from_pretrained("t5-base")
         tokenizer = T5Tokenizer.from_pretrained("t5-base")
 
@@ -88,6 +134,23 @@ def summarize_text(text: str) -> str:
         )
         summary = tokenizer.decode(output[0], skip_special_tokens=True)
 
+=======
+        model = T5ForConditionalGeneration.from_pretrained('t5-base')
+        tokenizer = T5Tokenizer.from_pretrained('t5-base')
+        input_ids = tokenizer.encode(
+            "summarize: " + text,
+            return_tensors='pt',
+            max_length=1024,
+            truncation=True
+        )
+        output = model.generate(
+            input_ids,
+            max_length=300,
+            num_beams=4,
+            early_stopping=True
+        )
+        summary = tokenizer.decode(output[0], skip_special_tokens=True)
+>>>>>>> 1afc19bf4d7cb340b0c57877aee9535b244f18df:backend/transcriber.py
         print("✅ Summary complete.")
         return summary
     except Exception as e:
@@ -95,6 +158,7 @@ def summarize_text(text: str) -> str:
         return "Summary generation failed."
 
 
+<<<<<<< HEAD:transcriber.py
 # ============================================================
 # 🚀 Step 4: Run standalone
 # ============================================================
@@ -120,3 +184,20 @@ if __name__ == "__main__":
     summary = summarize_text(text)
     print("\n🧾 --- Summary ---")
     print(summary)
+=======
+# === Step 4: Optional standalone test ===
+if __name__ == "__main__":
+    youtube_url = input("Enter YouTube video URL: ").strip()
+    audio_url = get_audio_url_from_youtube(youtube_url)
+    if audio_url:
+        text = transcribe_audio_from_url(audio_url)
+        if text:
+            print("\n--- Full Transcription ---")
+            print(text)
+            print("\n--- Summary ---")
+            print(summarize_text(text))
+        else:
+            print("❌ Transcription failed.")
+    else:
+        print("❌ Failed to get audio URL from YouTube.")
+>>>>>>> 1afc19bf4d7cb340b0c57877aee9535b244f18df:backend/transcriber.py
