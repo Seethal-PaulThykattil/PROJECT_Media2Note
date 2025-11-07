@@ -3,6 +3,11 @@ import google.generativeai as genai
 from dotenv import load_dotenv
 
 load_dotenv()
+def summarize_text(text):
+    # use T5 or any summarization model
+    # return summarized string
+    ...
+
 
 genai.configure(api_key=os.getenv("AIzaSyCg6ILZyw_c3-MdXa6LMls-LDBYDxPIK9M"))
 
