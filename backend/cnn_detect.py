@@ -1,3 +1,4 @@
+
 # cnn_detect.py
 # Detects person (teacher) in lecture frames using YOLOv8
 # Saves output frames with bounding boxes and detection metadata
@@ -8,6 +9,11 @@ import json
 import cv2
 import argparse
 from ultralytics import YOLO
+def detect_teachers(image_folder):
+    # run YOLOv8 detection on images
+    # return dictionary like { "image_name.jpg": { "teacher_boxes": [...] } }
+    ...
+
 
 # ----------------------------
 # Configuration
@@ -101,3 +107,4 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     run_detection(args.folder, args.conf, args.output)
+

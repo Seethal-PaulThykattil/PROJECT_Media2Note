@@ -7,6 +7,11 @@ import numpy as np
 import pytesseract
 from ultralytics import YOLO
 from typing import Dict, Any, List
+def extract_text_from_images(detection_results):
+    # loop through results, perform OCR for each teacher box
+    # return dictionary like { "image_name.jpg": { "teacher_boxes": [...], "extracted_text": "..." } }
+    ...
+
 
 # --- Configuration ---
 TESSERACT_PATH = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
