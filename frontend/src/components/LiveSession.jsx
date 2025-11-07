@@ -1,7 +1,8 @@
 import { useState, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './MainLayout.css';
 
-const LiveSession = ({ onBack, onSave }) => {
+const LiveSession = () => {
   const [isRecording, setIsRecording] = useState(false);
   const [recordedChunks, setRecordedChunks] = useState([]);
   const [snapshots, setSnapshots] = useState([]);
@@ -9,6 +10,7 @@ const LiveSession = ({ onBack, onSave }) => {
   const mediaRecorderRef = useRef(null);
   const snapshotIntervalRef = useRef(null);
   const streamRef = useRef(null);
+  const navigate = useNavigate();
 
   const captureSnapshot = () => {
     if (videoRef.current) {
@@ -80,8 +82,10 @@ const LiveSession = ({ onBack, onSave }) => {
         snapshots: snapshots,
         timestamp: new Date().toISOString()
       };
-      onSave(newRecording);
-      onBack();
+      // For now, we'll just log the recording to the console.
+      // In a real app, you would save this to a database or state management solution.
+      console.log(newRecording);
+      navigate('/');
     }
   };
 
@@ -97,7 +101,7 @@ const LiveSession = ({ onBack, onSave }) => {
   return (
     <div className="page-container">
       <div className="page-header">
-        <button className="back-btn" onClick={onBack}>← Back</button>
+        <button className="back-btn" onClick={() => navigate('/')}>← Back</button>
         <h2>Record Live Session</h2>
       </div>
       

@@ -1,99 +1,42 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import ImportURL from './ImportURL';
 import RecordAudio from './RecordAudio';
-import LiveSession from './LiveSession';
 import ScreenRecording from './ScreenRecording';
 import './MainLayout.css';
 
 const MainLayout = () => {
   const [activeTab, setActiveTab] = useState('home');
   const [showModal, setShowModal] = useState(false);
-  const [isRecording, setIsRecording] = useState(false);
   const [recordings, setRecordings] = useState([]);
-  const [currentView, setCurrentView] = useState('main');
+  const navigate = useNavigate();
 
   const handleRecordLiveSession = () => {
-    setCurrentView('live-session');
+    navigate('/live-session');
   };
 
   const handleImportURL = () => {
-    setCurrentView('import-url');
+    navigate('/import-url');
   };
 
   const handleUploadVideo = () => {
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = 'video/*';
-    input.onchange = (e) => {
-      const file = e.target.files[0];
-      if (file) {
-        const newRecording = {
-          id: Date.now(),
-          name: file.name,
-          type: 'video',
-          file: file,
-          timestamp: new Date().toISOString()
-        };
-        setRecordings([...recordings, newRecording]);
-      }
-    };
-    input.click();
+    navigate('/upload-video');
   };
 
   const handleRecordAudio = () => {
-    setCurrentView('record-audio');
+    navigate('/record-audio');
   };
 
   const handleUploadAudio = () => {
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = 'audio/*';
-    input.onchange = (e) => {
-      const file = e.target.files[0];
-      if (file) {
-        const newRecording = {
-          id: Date.now(),
-          name: file.name,
-          type: 'audio',
-          file: file,
-          timestamp: new Date().toISOString()
-        };
-        setRecordings([...recordings, newRecording]);
-      }
-    };
-    input.click();
+    navigate('/upload-audio');
   };
 
   const handleUploadDocument = () => {
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = '.pdf,.doc,.docx,.txt';
-    input.onchange = (e) => {
-      const file = e.target.files[0];
-      if (file) {
-        const newRecording = {
-          id: Date.now(),
-          name: file.name,
-          type: 'document',
-          file: file,
-          timestamp: new Date().toISOString()
-        };
-        setRecordings([...recordings, newRecording]);
-      }
-    };
-    input.click();
+    navigate('/upload-document');
   };
 
   const handleScreenRecording = () => {
-    setCurrentView('screen-recording');
-  };
-
-  const handleSaveRecording = (recording) => {
-    setRecordings([...recordings, recording]);
-  };
-
-  const handleBackToMain = () => {
-    setCurrentView('main');
+    navigate('/screen-recording');
   };
 
   return (
@@ -241,35 +184,6 @@ const MainLayout = () => {
           </div>
         )}
       </div>
-
-      {/* Render different views */}
-      {currentView === 'live-session' && (
-        <LiveSession 
-          onBack={handleBackToMain} 
-          onSave={handleSaveRecording}
-        />
-      )}
-      
-      {currentView === 'import-url' && (
-        <ImportURL 
-          onBack={handleBackToMain} 
-          onImport={handleSaveRecording}
-        />
-      )}
-      
-      {currentView === 'record-audio' && (
-        <RecordAudio 
-          onBack={handleBackToMain} 
-          onSave={handleSaveRecording}
-        />
-      )}
-
-      {currentView === 'screen-recording' && (
-        <ScreenRecording 
-          onBack={handleBackToMain} 
-          onSave={handleSaveRecording}
-        />
-      )}
 
       {/* Modal for Authentication */}
       {showModal && (
