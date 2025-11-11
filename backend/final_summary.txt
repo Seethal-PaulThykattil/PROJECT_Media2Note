@@ -1,5 +1,3 @@
-The provided text is **null**, meaning there is no lecture content to summarize.
+The lecture text appears to be missing or null.
 
-**Therefore, the summary is:**
-
-**There is no lecture content to summarize.**
+Please provide the text you would like me to summarize, and I will create a clear and concise summary for you.
