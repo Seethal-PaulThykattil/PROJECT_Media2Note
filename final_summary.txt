@@ -1,0 +1,11 @@
+<<<<<<< HEAD:backend/final_summary.txt
+The lecture text appears to be missing or null.
+
+Please provide the text you would like me to summarize, and I will create a clear and concise summary for you.
+=======
+The provided text is **null**, meaning there is no lecture content to summarize.
+
+**Therefore, the summary is:**
+
+**There is no lecture content to summarize.**
+>>>>>>> 2539c7e4e3fe21854c3fa0f3ac27a93ecae6c8e2:final_summary.txt
