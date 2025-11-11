@@ -1,26 +1,24 @@
-
-from fastapi import FastAPI, File, UploadFile
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
-import os
-import shutil
+from routes import router
 
-app = FastAPI()
+app = FastAPI(title="Media2Note Backend", version="1.0")
 
+# CORS setup for frontend communication
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["*"],  # You can limit to localhost:5173 later
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-UPLOAD_DIR = "uploads"
-os.makedirs(UPLOAD_DIR, exist_ok=True)
+app.include_router(router)
 
-@app.post("/upload-audio/")
-async def upload_audio(file: UploadFile = File(...)):
-    file_path = os.path.join(UPLOAD_DIR, file.filename)
-    with open(file_path, "wb") as buffer:
-        shutil.copyfileobj(file.file, buffer)
-    return JSONResponse(content={"message": "Audio uploaded successfully", "filename": file.filename})
+@app.get("/")
+def home():
+    return {"message": "🚀 Media2Note backend running successfully!"}
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000)

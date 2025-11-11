@@ -1,59 +1,36 @@
 import os
-import json
 from cnn_detect import detect_teachers
-from cnn_ocr_extract import extract_text_from_images
+from cnn_ocr_extract import extract_text_from_images as extract_text_from_frames
+
 from transcriber import transcribe_audio
 from summarizer import summarize_text
 
+def process_pipeline(video_file_path):
+    print("🚀 Starting Media2Note Pipeline...")
 
-def main():
-    print("🚀 Starting full lecture processing pipeline...")
+    if not os.path.exists(video_file_path):
+        return "❌ File not found."
 
-    # Step 1: Run teacher detection
-    print("\n[1/4] Running CNN teacher detection...")
-    detection_results = detect_teachers("input_images/")
-    with open("cnn_detection_results.json", "w") as f:
-        json.dump(detection_results, f, indent=4)
+    print("[1/4] Detecting frames with CNN...")
+    detect_teachers(video_file_path)
 
-    # Step 2: Run OCR extraction
-    print("\n[2/4] Extracting text from detected teacher boxes...")
-    lecture_notes = extract_text_from_images(detection_results)
-    with open("lecture_notes.json", "w") as f:
-        json.dump(lecture_notes, f, indent=4)
+    print("[2/4] Extracting text from frames...")
+    lecture_text = extract_text_from_frames("detected_frames")
 
-    # Step 3: Run audio transcription
-    print("\n[3/4] Transcribing audio...")
-    audio_path = "lecture_audio.mp3"
-
-    if not os.path.exists(audio_path):
-        print(f"⚠️ Audio file '{audio_path}' not found. Skipping transcription.")
-        transcript = ""
+    print("[3/4] Transcribing audio...")
+    audio_file = "lecture_audio.mp3"
+    transcript_text = ""
+    if os.path.exists(audio_file):
+        transcript_text = transcribe_audio(audio_file)
     else:
-        transcript = transcribe_audio(audio_path)
+        print("⚠️ No audio file found, skipping transcription.")
 
-    with open("full_lecture.txt", "w", encoding="utf-8") as f:
-        f.write(transcript if transcript else "")
-
-    # Step 4: Summarize the notes
-    print("\n[4/4] Summarizing extracted content...")
-    combined_text = (transcript or "") + "\n" + json.dumps(lecture_notes, indent=2)
+    print("[4/4] Summarizing...")
+    combined_text = lecture_text + "\n" + transcript_text
     summary = summarize_text(combined_text)
 
-    print("\n✅ Final Summary:\n")
-    print(summary)
-
-    # Save the summarized output
     with open("final_summary.txt", "w", encoding="utf-8") as f:
         f.write(summary)
 
-    print(
-        "\n🎯 Pipeline complete! Files saved:\n"
-        "- cnn_detection_results.json\n"
-        "- lecture_notes.json\n"
-        "- full_lecture.txt\n"
-        "- final_summary.txt"
-    )
-
-
-if __name__ == "__main__":
-    main()
+    print("✅ Process complete! Summary saved to final_summary.txt")
+    return summary
